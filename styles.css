@@ -1344,7 +1344,14 @@ img {
   }
 
   .header-actions {
-    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 12px;
+    display: flex;
+  }
+
+  .main-nav.is-open {
+    top: calc(100% + 50px);
   }
 
   .brand img {
