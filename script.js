@@ -381,7 +381,7 @@ const initMatrixRain = () => {
     width: 0,
     height: 0,
     lastFrame: 0,
-    frameMs: 72
+    frameMs: 96
   };
 
   const resizeCanvas = () => {
@@ -389,8 +389,8 @@ const initMatrixRain = () => {
     const isMobile = window.innerWidth < 700;
     state.width = window.innerWidth;
     state.height = window.innerHeight;
-    state.fontSize = isMobile ? 18 : 15;
-    state.frameMs = isMobile ? 120 : 72;
+    state.fontSize = isMobile ? 17 : 15;
+    state.frameMs = isMobile ? 180 : 96;
 
     canvas.width = Math.floor(state.width * pixelRatio);
     canvas.height = Math.floor(state.height * pixelRatio);
@@ -401,17 +401,23 @@ const initMatrixRain = () => {
     context.textAlign = "center";
     context.textBaseline = "top";
 
-    const gap = isMobile ? 42 : 28;
+    const gap = isMobile ? 64 : 34;
     const columnCount = Math.ceil(state.width / gap);
     state.columns = Array.from({ length: columnCount }, (_, index) => ({
       x: index * gap + gap / 2,
       y: Math.random() * state.height,
-      speed: isMobile ? 0.55 + Math.random() * 0.45 : 0.8 + Math.random() * 0.75,
-      trail: isMobile ? 5 + Math.floor(Math.random() * 4) : 7 + Math.floor(Math.random() * 7)
+      speed: isMobile ? 0.38 + Math.random() * 0.32 : 0.65 + Math.random() * 0.58,
+      trail: isMobile ? 4 + Math.floor(Math.random() * 3) : 6 + Math.floor(Math.random() * 6)
     }));
   };
 
   const draw = (timestamp) => {
+    if (document.hidden) {
+      state.lastFrame = timestamp;
+      window.requestAnimationFrame(draw);
+      return;
+    }
+
     if (timestamp - state.lastFrame < state.frameMs) {
       window.requestAnimationFrame(draw);
       return;
