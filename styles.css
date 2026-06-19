@@ -698,7 +698,7 @@ img {
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
 
@@ -715,6 +715,7 @@ img {
 .project-card::before {
   position: absolute;
   inset: 0;
+  z-index: 0;
   content: "";
   background: var(--project-bg);
 }
@@ -722,8 +723,24 @@ img {
 .project-card::after {
   position: absolute;
   inset: 0;
+  z-index: 0;
   content: "";
   background: linear-gradient(180deg, transparent, rgba(1, 3, 10, 0.82));
+}
+
+.project-card img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.05) contrast(1.02) brightness(0.82);
+  transition: transform 220ms ease;
+}
+
+.project-card:hover img {
+  transform: scale(1.05);
 }
 
 .project-card span,
@@ -770,6 +787,20 @@ img {
     radial-gradient(circle at 78% 38%, #ff69dd 0 9%, transparent 10%),
     radial-gradient(circle at 74% 68%, rgba(255, 222, 97, 0.52), transparent 20%),
     linear-gradient(135deg, #191052, #7811d8 54%, #080615);
+}
+
+.rutfit {
+  --project-bg:
+    radial-gradient(circle at 70% 42%, rgba(54, 255, 134, 0.24), transparent 13rem),
+    linear-gradient(135deg, #081329, #050813 70%);
+}
+
+.rutfit img {
+  inset: 22%;
+  width: 56%;
+  height: 56%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 32px rgba(0, 0, 0, 0.4));
 }
 
 .about-panel {
