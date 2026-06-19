@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://numore99.github.io/NUMORE-LABS/sitemap.xml
