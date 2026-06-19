@@ -359,6 +359,95 @@ const setHeaderState = () => {
   header.classList.toggle("is-scrolled", window.scrollY > 20);
 };
 
+const initMatrixRain = () => {
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (motionQuery.matches) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.className = "matrix-rain";
+  canvas.setAttribute("aria-hidden", "true");
+  document.body.prepend(canvas);
+
+  const context = canvas.getContext("2d", { alpha: true });
+  if (!context) {
+    canvas.remove();
+    return;
+  }
+
+  const characters = "NUMORELABS<>/{}01";
+  const state = {
+    columns: [],
+    fontSize: 15,
+    width: 0,
+    height: 0,
+    lastFrame: 0,
+    frameMs: 72
+  };
+
+  const resizeCanvas = () => {
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    const isMobile = window.innerWidth < 700;
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
+    state.fontSize = isMobile ? 18 : 15;
+    state.frameMs = isMobile ? 120 : 72;
+
+    canvas.width = Math.floor(state.width * pixelRatio);
+    canvas.height = Math.floor(state.height * pixelRatio);
+    canvas.style.width = `${state.width}px`;
+    canvas.style.height = `${state.height}px`;
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    context.font = `400 ${state.fontSize}px Consolas, "Courier New", monospace`;
+    context.textAlign = "center";
+    context.textBaseline = "top";
+
+    const gap = isMobile ? 42 : 28;
+    const columnCount = Math.ceil(state.width / gap);
+    state.columns = Array.from({ length: columnCount }, (_, index) => ({
+      x: index * gap + gap / 2,
+      y: Math.random() * state.height,
+      speed: isMobile ? 0.55 + Math.random() * 0.45 : 0.8 + Math.random() * 0.75,
+      trail: isMobile ? 5 + Math.floor(Math.random() * 4) : 7 + Math.floor(Math.random() * 7)
+    }));
+  };
+
+  const draw = (timestamp) => {
+    if (timestamp - state.lastFrame < state.frameMs) {
+      window.requestAnimationFrame(draw);
+      return;
+    }
+
+    state.lastFrame = timestamp;
+    context.clearRect(0, 0, state.width, state.height);
+
+    state.columns.forEach((column) => {
+      for (let step = 0; step < column.trail; step += 1) {
+        const character = characters[Math.floor(Math.random() * characters.length)];
+        const y = column.y - step * state.fontSize * 1.28;
+        if (y < -state.fontSize || y > state.height) continue;
+
+        const alpha = Math.max(0, (column.trail - step) / column.trail);
+        const isAccent = Math.random() > 0.92;
+        context.fillStyle = isAccent
+          ? `rgba(54, 255, 134, ${0.16 * alpha})`
+          : `rgba(0, 200, 255, ${0.18 * alpha})`;
+        context.fillText(character, column.x, y);
+      }
+
+      column.y += state.fontSize * column.speed;
+      if (column.y - column.trail * state.fontSize > state.height + 80) {
+        column.y = -Math.random() * state.height * 0.5;
+      }
+    });
+
+    window.requestAnimationFrame(draw);
+  };
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+  window.requestAnimationFrame(draw);
+};
+
 const t = (key, language = getSavedLanguage()) => translations[language][key] || translations.pt[key] || key;
 
 const applyLanguage = (language) => {
@@ -407,6 +496,7 @@ document.querySelectorAll(".main-nav a").forEach((link) => {
 window.addEventListener("scroll", setHeaderState, { passive: true });
 setHeaderState();
 applyLanguage(getSavedLanguage());
+initMatrixRain();
 
 const revealTargets = document.querySelectorAll(
   ".hero-copy, .hero-visual, .page-hero, .section-heading, .service-card, .project-card, .about-panel, .detail-card, .case-card, .story-card, .contact-form, .footer-grid > div"
