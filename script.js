@@ -116,6 +116,10 @@ const translations = {
     "form.messagePlaceholder": "Conte-nos sobre seu projeto",
     "form.submit": "Enviar mensagem",
     "form.success": "Abrimos o WhatsApp com sua mensagem pronta para enviar.",
+    "validation.nameRequired": "Preencha seu nome.",
+    "validation.emailRequired": "Preencha seu e-mail.",
+    "validation.emailInvalid": "Digite um e-mail válido.",
+    "validation.messageRequired": "Conte-nos sobre seu projeto.",
     "footer.blurb": "Soluções digitais que impulsionam seu negócio e conectam você ao futuro.",
     "footer.navigation": "Navegação",
     "footer.location": "São Paulo - SP",
@@ -229,6 +233,10 @@ const translations = {
     "form.messagePlaceholder": "Cuéntanos sobre tu proyecto",
     "form.submit": "Enviar mensaje",
     "form.success": "Abrimos WhatsApp con tu mensaje listo para enviar.",
+    "validation.nameRequired": "Completa tu nombre.",
+    "validation.emailRequired": "Completa tu email.",
+    "validation.emailInvalid": "Ingresa un email válido.",
+    "validation.messageRequired": "Cuéntanos sobre tu proyecto.",
     "footer.blurb": "Soluciones digitales que impulsan tu negocio y te conectan con el futuro.",
     "footer.navigation": "Navegación",
     "footer.location": "São Paulo - SP",
@@ -342,6 +350,10 @@ const translations = {
     "form.messagePlaceholder": "Tell us about your project",
     "form.submit": "Send message",
     "form.success": "WhatsApp opened with your message ready to send.",
+    "validation.nameRequired": "Please enter your name.",
+    "validation.emailRequired": "Please enter your email.",
+    "validation.emailInvalid": "Please enter a valid email.",
+    "validation.messageRequired": "Tell us about your project.",
     "footer.blurb": "Digital solutions that boost your business and connect you to the future.",
     "footer.navigation": "Navigation",
     "footer.location": "São Paulo - SP",
@@ -456,6 +468,45 @@ const initMatrixRain = () => {
 
 const t = (key, language = getSavedLanguage()) => translations[language][key] || translations.pt[key] || key;
 
+const validationMessages = {
+  name: {
+    valueMissing: "validation.nameRequired"
+  },
+  email: {
+    valueMissing: "validation.emailRequired",
+    typeMismatch: "validation.emailInvalid"
+  },
+  message: {
+    valueMissing: "validation.messageRequired"
+  }
+};
+
+const getValidationMessage = (field) => {
+  const messages = validationMessages[field.name];
+  if (!messages) return "";
+  if (field.validity.valueMissing && messages.valueMissing) return t(messages.valueMissing);
+  if (field.validity.typeMismatch && messages.typeMismatch) return t(messages.typeMismatch);
+  return "";
+};
+
+const updateFieldValidation = (field) => {
+  field.setCustomValidity("");
+  const message = getValidationMessage(field);
+  field.setCustomValidity(message);
+};
+
+const syncFormValidationMessages = () => {
+  const form = document.querySelector("[data-contact-form]");
+  if (!form) return;
+  form.querySelectorAll("input, textarea").forEach((field) => {
+    if (field.validity.valid) {
+      field.setCustomValidity("");
+      return;
+    }
+    updateFieldValidation(field);
+  });
+};
+
 const applyLanguage = (language) => {
   const lang = supportedLanguages.includes(language) ? language : "pt";
   localStorage.setItem("numore-lang", lang);
@@ -475,6 +526,7 @@ const applyLanguage = (language) => {
   document.querySelectorAll("[data-lang]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === lang);
   });
+  syncFormValidationMessages();
 };
 
 document.querySelectorAll("[data-nav-page]").forEach((link) => {
@@ -537,6 +589,15 @@ if ("IntersectionObserver" in window) {
 const contactForm = document.querySelector("[data-contact-form]");
 
 if (contactForm) {
+  contactForm.querySelectorAll("input, textarea").forEach((field) => {
+    field.addEventListener("invalid", () => updateFieldValidation(field));
+    field.addEventListener("input", () => {
+      field.setCustomValidity("");
+      if (!field.validity.valid) updateFieldValidation(field);
+    });
+    field.addEventListener("blur", () => updateFieldValidation(field));
+  });
+
   contactForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const note = document.querySelector("[data-form-note]");
