@@ -669,19 +669,21 @@ img {
   height: 56px;
   place-items: center;
   border-radius: 50%;
-  color: var(--cyan);
-  background: radial-gradient(circle at 35% 25%, rgba(8, 217, 255, 0.34), rgba(87, 35, 255, 0.48));
+  color: #a8b3c7;
+  background: radial-gradient(circle at 35% 25%, rgba(148, 163, 184, 0.2), rgba(50, 62, 86, 0.58));
   font-size: 1.35rem;
 }
 
 .icon-box svg {
-  width: 28px;
-  height: 28px;
+  display: block;
+  width: 29px;
+  height: 29px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
+  stroke-width: 1.85;
+  overflow: visible;
 }
 
 .service-card h3,
