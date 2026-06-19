@@ -1110,14 +1110,11 @@ img {
   }
 
   .mobile-quick-nav a {
-    overflow: hidden;
-    max-width: 86px;
     border: 1px solid rgba(123, 151, 230, 0.2);
     border-radius: 999px;
     background: rgba(8, 13, 27, 0.3);
     color: #f7fbff;
     padding: 8px 10px;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -1224,13 +1221,7 @@ img {
   }
 
   .mobile-quick-nav {
-    gap: 6px;
-    font-size: 0.72rem;
-  }
-
-  .mobile-quick-nav a {
-    max-width: 76px;
-    padding: 7px 8px;
+    display: none;
   }
 
   .hero {
@@ -1356,18 +1347,8 @@ img {
   }
 
   .brand img {
-    width: 64px;
-    height: 28px;
-  }
-
-  .mobile-quick-nav {
-    justify-content: end;
-    gap: 5px;
-  }
-
-  .mobile-quick-nav a {
-    max-width: 49px;
-    padding: 6px 6px;
+    width: 102px;
+    height: 34px;
   }
 
   .language-switcher {
