@@ -674,6 +674,16 @@ img {
   font-size: 1.35rem;
 }
 
+.icon-box svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
 .service-card h3,
 .footer-grid h3 {
   margin: 22px 0 0;
