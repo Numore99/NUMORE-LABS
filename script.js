@@ -3,6 +3,9 @@ const nav = document.querySelector("[data-nav]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const currentPage = document.body.dataset.page;
 const supportedLanguages = ["es", "pt", "en"];
+const whatsappNumber = "5511973570887";
+const defaultWhatsappText = "Hola Numore Labs, quiero hacer una consulta";
+const buildWhatsappUrl = (message = defaultWhatsappText) => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
 const translations = {
   pt: {
@@ -112,7 +115,7 @@ const translations = {
     "form.message": "Mensagem",
     "form.messagePlaceholder": "Conte-nos sobre seu projeto",
     "form.submit": "Enviar mensagem",
-    "form.success": "Mensagem pronta. Conecte este formulário ao seu e-mail ou WhatsApp quando tiver os dados finais.",
+    "form.success": "Abrimos o WhatsApp com sua mensagem pronta para enviar.",
     "footer.blurb": "Soluções digitais que impulsionam seu negócio e conectam você ao futuro.",
     "footer.navigation": "Navegação",
     "footer.location": "São Paulo - SP",
@@ -225,7 +228,7 @@ const translations = {
     "form.message": "Mensaje",
     "form.messagePlaceholder": "Cuéntanos sobre tu proyecto",
     "form.submit": "Enviar mensaje",
-    "form.success": "Mensaje listo. Conecta este formulario a tu email o WhatsApp cuando tengas los datos finales.",
+    "form.success": "Abrimos WhatsApp con tu mensaje listo para enviar.",
     "footer.blurb": "Soluciones digitales que impulsan tu negocio y te conectan con el futuro.",
     "footer.navigation": "Navegación",
     "footer.location": "São Paulo - SP",
@@ -338,7 +341,7 @@ const translations = {
     "form.message": "Message",
     "form.messagePlaceholder": "Tell us about your project",
     "form.submit": "Send message",
-    "form.success": "Message ready. Connect this form to your email or WhatsApp when you have the final details.",
+    "form.success": "WhatsApp opened with your message ready to send.",
     "footer.blurb": "Digital solutions that boost your business and connect you to the future.",
     "footer.navigation": "Navigation",
     "footer.location": "São Paulo - SP",
@@ -405,12 +408,53 @@ window.addEventListener("scroll", setHeaderState, { passive: true });
 setHeaderState();
 applyLanguage(getSavedLanguage());
 
+const revealTargets = document.querySelectorAll(
+  ".hero-copy, .hero-visual, .page-hero, .section-heading, .service-card, .project-card, .about-panel, .detail-card, .case-card, .story-card, .contact-form, .footer-grid > div"
+);
+
+revealTargets.forEach((element, index) => {
+  element.dataset.reveal = "";
+  element.style.setProperty("--reveal-delay", `${Math.min(index % 4, 3) * 80}ms`);
+});
+
+document.querySelectorAll(".hero-visual, .service-card, .project-card").forEach((element, index) => {
+  element.dataset.float = "";
+  element.style.setProperty("--float-duration", `${7 + (index % 3)}s`);
+  element.style.setProperty("--float-delay", `${(index % 4) * -0.8}s`);
+});
+
+if ("IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+  );
+
+  revealTargets.forEach((element) => revealObserver.observe(element));
+} else {
+  revealTargets.forEach((element) => element.classList.add("is-visible"));
+}
+
 const contactForm = document.querySelector("[data-contact-form]");
 
 if (contactForm) {
   contactForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const note = document.querySelector("[data-form-note]");
+    const formData = new FormData(event.currentTarget);
+    const message = [
+      "Hola Numore Labs, quiero hacer una consulta.",
+      `Nombre: ${formData.get("name") || ""}`,
+      `Email: ${formData.get("email") || ""}`,
+      `Proyecto: ${formData.get("project") || ""}`,
+      `Mensaje: ${formData.get("message") || ""}`
+    ].join("\n");
+    window.open(buildWhatsappUrl(message), "_blank", "noopener");
     note.textContent = t("form.success");
     event.currentTarget.reset();
   });
