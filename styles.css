@@ -1289,6 +1289,26 @@ img {
 
   .hero-features {
     display: grid;
+    width: fit-content;
+    max-width: 100%;
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 14px;
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  .hero-features span {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+  }
+
+  .hero-features span + span {
+    border-left: 0;
+    padding-left: 0;
   }
 
   .hero-visual {
