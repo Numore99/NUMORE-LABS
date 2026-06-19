@@ -1106,24 +1106,6 @@ img {
   text-align: center;
 }
 
-.social-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.social-row a {
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-
 @media (max-width: 980px) {
   .site-header {
     grid-template-columns: auto 1fr auto auto;
