@@ -48,13 +48,6 @@ const translations = {
     "home.cardSupport": "Mantemos seu site sempre atualizado, seguro e funcionando perfeitamente.",
     "home.portfolioTitle": "Projetos que geram resultados",
     "home.allProjects": "Ver todos os projetos",
-    "home.stat1Label": "Responsivo em todos os dispositivos",
-    "home.stat2Label": "Idiomas disponíveis",
-    "home.stat3Label": "Projetos entregues",
-    "home.stat4Label": "Suporte e acompanhamento",
-    "home.ctaTitle": "Vamos criar algo extraordinário juntos.",
-    "home.ctaText": "Conte sua ideia e transformamos em uma presença digital rápida, moderna e pronta para crescer.",
-    "home.ctaButton": "Começar projeto",
     "services.heroTitle": "Soluções prontas para explicar, vender e atender melhor.",
     "services.heroText": "Pacotes completos adaptados a cada empresa, com soluções digitais desenhadas para impulsionar seu crescimento e presença online.",
     "services.web.title": "Sites Profissionais",
@@ -177,13 +170,6 @@ const translations = {
     "home.cardSupport": "Mantenemos tu sitio siempre actualizado, seguro y funcionando perfectamente.",
     "home.portfolioTitle": "Proyectos que generan resultados",
     "home.allProjects": "Ver todos los proyectos",
-    "home.stat1Label": "Responsivo en todos los dispositivos",
-    "home.stat2Label": "Idiomas disponibles",
-    "home.stat3Label": "Proyectos entregados",
-    "home.stat4Label": "Soporte y acompañamiento",
-    "home.ctaTitle": "Creemos algo extraordinario juntos.",
-    "home.ctaText": "Cuéntanos tu idea y la convertimos en una presencia digital rápida, moderna y lista para crecer.",
-    "home.ctaButton": "Empezar proyecto",
     "services.heroTitle": "Soluciones listas para explicar, vender y atender mejor.",
     "services.heroText": "Paquetes completos adaptados a cada empresa, con soluciones digitales diseñadas para impulsar su crecimiento y presencia online.",
     "services.web.title": "Sitios Profesionales",
@@ -306,13 +292,6 @@ const translations = {
     "home.cardSupport": "We keep your website updated, secure, and working perfectly.",
     "home.portfolioTitle": "Projects built to generate results",
     "home.allProjects": "View all projects",
-    "home.stat1Label": "Responsive on every device",
-    "home.stat2Label": "Languages available",
-    "home.stat3Label": "Projects delivered",
-    "home.stat4Label": "Support and maintenance",
-    "home.ctaTitle": "Let's build something extraordinary together.",
-    "home.ctaText": "Tell us your idea and we'll turn it into a fast, modern digital presence ready to grow.",
-    "home.ctaButton": "Start a project",
     "services.heroTitle": "Solutions ready to explain, sell, and support better.",
     "services.heroText": "Complete packages adapted to each company, with digital solutions designed to boost growth and online presence.",
     "services.web.title": "Professional Websites",
@@ -593,7 +572,7 @@ applyLanguage(getSavedLanguage());
 initMatrixRain();
 
 const revealTargets = document.querySelectorAll(
-  ".hero-copy, .hero-visual, .page-hero, .section-heading, .service-card, .project-card, .stat-card, .cta-band, .marquee, .about-panel, .detail-card, .case-card, .story-card, .contact-form, .footer-grid > div"
+  ".hero-copy, .hero-visual, .page-hero, .section-heading, .service-card, .project-card, .about-panel, .detail-card, .case-card, .story-card, .contact-form, .footer-grid > div"
 );
 
 revealTargets.forEach((element, index) => {
@@ -601,10 +580,9 @@ revealTargets.forEach((element, index) => {
   element.style.setProperty("--reveal-delay", `${Math.min(index % 4, 3) * 80}ms`);
 });
 
-document.querySelectorAll(".hero-badge").forEach((element, index) => {
+document.querySelectorAll(".hero-visual, .service-card, .project-card").forEach((element, index) => {
   element.dataset.float = "";
-  element.classList.add("is-visible");
-  element.style.setProperty("--float-duration", `${6 + (index % 3)}s`);
+  element.style.setProperty("--float-duration", `${7 + (index % 3)}s`);
   element.style.setProperty("--float-delay", `${(index % 4) * -0.8}s`);
 });
 
@@ -650,105 +628,4 @@ if (contactForm) {
     note.textContent = t("form.success");
     event.currentTarget.reset();
   });
-}
-
-/* ===========================================================
-   Mejoras de interacción 2026
-   =========================================================== */
-
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-// Barra de progreso de scroll
-(() => {
-  const bar = document.createElement("div");
-  bar.className = "scroll-progress";
-  document.body.appendChild(bar);
-  const update = () => {
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
-    bar.style.width = `${Math.min(100, ratio * 100)}%`;
-  };
-  window.addEventListener("scroll", update, { passive: true });
-  window.addEventListener("resize", update, { passive: true });
-  update();
-})();
-
-// Spotlight de cursor + tilt 3D en tarjetas
-if (!prefersReducedMotion && window.matchMedia("(pointer: fine)").matches) {
-  const spotlightCards = document.querySelectorAll(".service-card, .stat-card, .story-card");
-  spotlightCards.forEach((card) => {
-    card.addEventListener("pointermove", (event) => {
-      const rect = card.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      card.style.setProperty("--mx", `${x}%`);
-      card.style.setProperty("--my", `${y}%`);
-    });
-  });
-
-  const tiltCards = document.querySelectorAll(".service-card, .project-card, .case-card");
-  tiltCards.forEach((card) => {
-    let raf = null;
-    card.style.transformStyle = "preserve-3d";
-    card.addEventListener("pointermove", (event) => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        raf = null;
-        const rect = card.getBoundingClientRect();
-        const px = (event.clientX - rect.left) / rect.width - 0.5;
-        const py = (event.clientY - rect.top) / rect.height - 0.5;
-        card.style.transform = `translateY(-8px) perspective(900px) rotateX(${(-py * 5).toFixed(2)}deg) rotateY(${(px * 6).toFixed(2)}deg)`;
-      });
-    });
-    card.addEventListener("pointerleave", () => {
-      if (raf) {
-        window.cancelAnimationFrame(raf);
-        raf = null;
-      }
-      card.style.transform = "";
-    });
-  });
-}
-
-// Contadores animados
-const counters = document.querySelectorAll("[data-count]");
-if (counters.length) {
-  const animateCount = (el) => {
-    const target = parseFloat(el.dataset.count);
-    const suffix = el.dataset.suffix || "";
-    if (Number.isNaN(target)) {
-      el.textContent = el.dataset.suffix || el.textContent;
-      return;
-    }
-    if (prefersReducedMotion) {
-      el.textContent = `${target}${suffix}`;
-      return;
-    }
-    const duration = 1400;
-    const start = performance.now();
-    const step = (now) => {
-      const progress = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = `${Math.round(target * eased)}${suffix}`;
-      if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
-  };
-
-  if ("IntersectionObserver" in window) {
-    const countObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            animateCount(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-    counters.forEach((el) => countObserver.observe(el));
-  } else {
-    counters.forEach((el) => animateCount(el));
-  }
 }
