@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://numore99.github.io/NUMORE-LABS/sitemap.xml
+Sitemap: https://numorelabs.com.br/sitemap.xml
