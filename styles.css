@@ -919,7 +919,7 @@ h3 {
 
 .service-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
 }
 
@@ -1209,6 +1209,13 @@ h3 {
   transform: translateY(-4px);
   border-color: var(--line-strong);
   box-shadow: var(--glow);
+}
+
+.detail-card-support {
+  border-color: rgba(54, 255, 134, 0.26);
+  background:
+    radial-gradient(circle at 92% 14%, rgba(54, 255, 134, 0.08), transparent 34%),
+    linear-gradient(145deg, rgba(11, 17, 35, 0.96), rgba(8, 12, 27, 0.9));
 }
 
 .detail-card > span {
